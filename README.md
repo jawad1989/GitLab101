@@ -247,6 +247,22 @@ job deploy-to-production:
 # Running Static Website in GitLab
 https://gitlab.com/jawadxiv/staticsite/pages
 
+`.config-ci.yml`
+```
+# Full project: https://gitlab.com/pages/plain-html
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+```
+
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
