@@ -196,6 +196,57 @@ run:
 4. Monitor the Analytics
 ![Run complete](https://github.com/jawad1989/GitLab101/blob/master/images/analytics.PNG)
 
+# Running jobs in parallel
+https://gitlab.com/jawadxiv/portal_cfg_lw
+
+`.config-ci.yml `
+```
+image: busybox:latest
+
+before_script:
+  - echo "Before script section"
+  - echo "For example you might run an update here or install a build dependency"
+  - echo "Or perhaps you might print out some debugging details"
+
+after_script:
+  - echo "After script section"
+  - echo "For example you might do some cleanup here"
+
+build1:
+  stage: build
+  script:
+    - echo "Do your build here"
+
+test1:
+  stage: test
+  script:
+    - echo "Do a test here"
+    - echo "For example run a test suite"
+
+test2:
+  stage: test
+  script:
+    - echo "Do another parallel test here"
+    - echo "For example run a lint test"
+
+
+test3:
+  stage: test
+  script:
+    - echo " im the third test"
+
+job deploy-to-production:
+  stage: deploy
+  script:
+    - echo "Do your deploy here"
+
+```
+
+![Multiple Jobs](https://github.com/jawad1989/GitLab101/blob/master/images/multiple%20jobs.PNG)
+
+# Running Static Website in GitLab
+https://gitlab.com/jawadxiv/staticsite/pages
+
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
