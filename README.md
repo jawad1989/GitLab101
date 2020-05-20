@@ -263,6 +263,12 @@ pages:
     - master
 ```
 
+# Running Java Code in Gitlab
+https://www.youtube.com/watch?v=ypbGz7kE-Bo
+
+# Deploye Node.js app to server (VirtualBox)
+https://www.youtube.com/watch?v=iQbENcbPtDo
+
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
