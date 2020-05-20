@@ -119,4 +119,31 @@ This page guides you how to
 2. install and register a runner
 3. see the pipeline status
 
-More Eamples can be seen at [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)
+# Create your first CI CD pipeline
+1. Create a Project
+2. Click Open Web IDE
+3. Create a new file `.config-ci.yml"
+  ```
+  image: centos:7
+
+test:
+    script:
+        - echo "Hello from Gitlab" && exit 1
+```
+4. Commit the file, create a new branch, select no merge
+5. on right side click pipleine, click the pipleine and you will see pipleine getting failed.
+6. change the config file, to `exit 0`
+  ![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/exit%200.PNG)
+7. Commit the file, this time pipleline will be successful.
+![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/pipeline%20success.PNG)
+
+![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/console%20log.PNG)
+
+
+
+
+## GitLab Registery 
+### Useful Resources
+More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
+https://about.gitlab.com/blog/2018/01/22/a-beginners-guide-to-continuous-integration/<br/>
+https://gitlab.com/gitlab-examples<br/>
