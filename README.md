@@ -120,9 +120,15 @@ This page guides you how to
 3. see the pipeline status
 
 # Create your first CI CD pipeline
+ fork the project https://gitlab.com/dnsmichi/meetup-2020-cw13
+ 
 1. Create a Project
-2. Click Open Web IDE
+2. pen the Web IDE (repository view, centered button)
 3. Create a new file `.config-ci.yml"
+ * Use Docker: “image: centos:7”
+ * Define a simple job called “test”, executing a “script”
+ * Commit & inspect the CI job
+ *
   ```
   image: centos:7
 
@@ -132,14 +138,17 @@ test:
 ```
 4. Commit the file, create a new branch, select no merge
 5. on right side click pipleine, click the pipleine and you will see pipleine getting failed.
-6. change the config file, to `exit 0`
+6. Change “exit 1” to “exit 0”, commit and inspect again  
+
   ![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/exit%200.PNG)
+
 7. Commit the file, this time pipleline will be successful.
+
 ![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/pipeline%20success.PNG)
 
 ![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/console%20log.PNG)
 
-# Part 2: Create a CICD pipeline for Go Lang 
+# Part 2: Create a CI pipeline for Go Lang 
 1. create a `main.go` file
  ```
    package main
@@ -156,16 +165,40 @@ func main(){
 2. goto you `.config-ci.yml` file and this time from templates choose go lang:
 ![GoLang Template](https://github.com/jawad1989/GitLab101/blob/master/images/go%20template.PNG)
 
-3. update the template with your project and username:
+3. Edit “REPO_NAME” with the URL to the current project (no leading https://)
+
 ![Update Template](https://github.com/jawad1989/GitLab101/blob/master/images/update%20yml.PNG)
 
 4. Press commit, add comments, dont merge
 5. You will see the pipeline running
+  *  The repository provides “.gitlab-ci.solution.yml” to verify your changes.
+  
 6. Select pipeline, you will see the stages as defined in CI config file.
 ![pipeline success](https://github.com/jawad1989/GitLab101/blob/master/images/pipeline%20sucess%20-%20go%20lang.PNG)
 ![CICD success](https://github.com/jawad1989/GitLab101/blob/master/images/CICD%20success.PNG)
+
+# Part 3: Add CD 
+1. Open the .gitlab-ci.yml file in the Web IDE
+  * Add a new stage called “deploy” in the “stages” array (if not existing)
+   * Add a new job called “run”
+     * stage: deploy
+     * Script: ./tanuki
+```
+run:
+  stage: deploy 
+  script:
+    - ./tanuki
+```
+2. Commit the changes
+3. Inspect the CI pipeline and open the log window for the “run” job 
+ ![Run complete](https://github.com/jawad1989/GitLab101/blob/master/images/run%20complet.PNG)
+ 
+4. Monitor the Analytics
+![Run complete](https://github.com/jawad1989/GitLab101/blob/master/images/analytics.PNG)
+
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
 https://about.gitlab.com/blog/2018/01/22/a-beginners-guide-to-continuous-integration/<br/>
 https://gitlab.com/gitlab-examples<br/>
+Self-Practice: Try JUnit with various test frameworks: https://docs.gitlab.com/ee/ci/junit_test_reports.html
