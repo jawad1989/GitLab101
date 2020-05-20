@@ -201,4 +201,5 @@ run:
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
 https://about.gitlab.com/blog/2018/01/22/a-beginners-guide-to-continuous-integration/<br/>
 https://gitlab.com/gitlab-examples<br/>
-Self-Practice: Try JUnit with various test frameworks: https://docs.gitlab.com/ee/ci/junit_test_reports.html
+Self-Practice: Try JUnit with various test frameworks: https://docs.gitlab.com/ee/ci/junit_test_reports.html <br/>
+https://www.youtube.com/watch?v=l5705U8s_nQ&t=397
