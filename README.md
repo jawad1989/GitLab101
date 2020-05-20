@@ -139,9 +139,31 @@ test:
 
 ![pipelineCI](https://github.com/jawad1989/GitLab101/blob/master/images/console%20log.PNG)
 
+# Part 2: Create a CICD pipeline for Go Lang 
+1. create a `main.go` file
+ ```
+   package main
 
+import(
+    "fmt"
+)
 
+func main(){
+    fmt.Println("hello from Git Lab Project")
+}
+```
 
+2. goto you `.config-ci.yml` file and this time from templates choose go lang:
+![GoLang Template](https://github.com/jawad1989/GitLab101/blob/master/images/go%20template.PNG)
+
+3. update the template with your project and username:
+![Update Template](https://github.com/jawad1989/GitLab101/blob/master/images/update%20yml.PNG)
+
+4. Press commit, add comments, dont merge
+5. You will see the pipeline running
+6. Select pipeline, you will see the stages as defined in CI config file.
+![pipeline success](https://github.com/jawad1989/GitLab101/blob/master/images/pipeline%20sucess%20-%20go%20lang.PNG)
+![CICD success](https://github.com/jawad1989/GitLab101/blob/master/images/CICD%20success.PNG)
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
