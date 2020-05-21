@@ -16,7 +16,8 @@ Table of Contents
 13. [Running Java Code in GitLab](#running-java-code-in-gitlab)
 14. [Deploying Node.js App to Server](#deploye-nodejs-app-to-server-virtualbox)
 15. [SSH Connection: Deploying to EC2](#ssh-connectionx)
-46. [Building Docker images/Docker Registery with Gitlab CI ](#building-docker-images-and-adding-to-docker-registery)
+16. [Building Docker images/Docker Registery with Gitlab CI ](#building-docker-images-and-adding-to-docker-registery)
+17. [Run Unit Test on HTML using Tidy and then deploy]
 
 # 1. GitLab101
 
@@ -378,6 +379,120 @@ docker-build-master:
 ```
 3. Container Registery successful once pipeline completes
 ![containerRegistery](https://github.com/jawad1989/GitLab101/blob/master/images/container-registery.PNG)
+
+# Run Unit Test on HTML using Tidy and then deploy
+
+1. tidy.sh script
+
+make a directory `docker/install_tidy.sh'
+
+```
+#!/bin/bash
+
+set -e
+set -u
+
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update && apt-get install --no-install-recommends -yy tidy
+```
+
+2. index.html
+```
+<html>
+<body>
+</body>
+</html>
+
+```
+
+3. .gitlab-ci.yml
+
+```
+image: debian:buster
+
+variables:
+    DEPLOY_FOLDER: '/srv/test'
+    
+stages:
+    - test 
+    - deploy
+    
+test-code:
+    stage: test
+    script:
+        # code quality test
+        - bash docker/install_tidy.sh
+        - tidy -q -errors index.html
+
+deploy-code:
+    stage: deploy
+    artifacts:
+        paths:
+            - index.html
+        expire_in: 1 month
+    script:
+        - cp index.html "${DEPLOY_FOLDER}"
+    only:
+        - master
+```
+
+4. pipeline status
+test stage will fail as html is not proper
+
+```
+ Selecting previously unselected package tidy.
+ Preparing to unpack .../tidy_2%3a5.6.0-10_amd64.deb ...
+ Unpacking tidy (2:5.6.0-10) ...
+ Setting up libtidy5deb1:amd64 (2:5.6.0-10) ...
+ Setting up tidy (2:5.6.0-10) ...
+ Processing triggers for libc-bin (2.28-10) ...
+ $ tidy -q -errors index.html
+ line 1 column 1 - Warning: missing <!DOCTYPE> declaration
+ line 2 column 1 - Warning: inserting missing 'title' element
+Running after_script
+00:01
+Uploading artifacts for failed job
+00:02
+ ERROR: Job failed: exit code 1
+```
+5. new_html.html
+you can change the html or use a new html
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>This is a Heading</h1>
+<p>This is a paragraph.</p>
+
+</body>
+</html>
+```
+
+and in `.gitlab-ci.yml` update the new html file 'new_html.html'
+```
+test-code:
+    stage: test
+    script:
+        # code quality test
+        - bash docker/install_tidy.sh
+        - tidy -q -errors new_html.html
+```
+
+6. pipeline status
+
+```
+Uploading artifacts for successful job
+00:03
+ Uploading artifacts...
+ index.html: found 1 matching files                 
+ Uploading artifacts to coordinator... ok            id=562873680 responseStatus=201 Created token=cnWFqn39
+ Job succeeded
+```
 
 ## GitLab Registery 
 ### Useful Resources
