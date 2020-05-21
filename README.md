@@ -16,7 +16,7 @@ Table of Contents
 13. [Running Java Code in GitLab](#running-java-code-in-gitlab)
 14. [Deploying Node.js App to Server](#deploye-nodejs-app-to-server-virtualbox)
 15. [SSH Connection: Deploying to EC2](#ssh-connectionx)
- 
+46. [Building Docker images/Docker Registery with Gitlab CI ](#building-docker-images-and-adding-to-docker-registery)
 
 # 1. GitLab101
 
