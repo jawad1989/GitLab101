@@ -15,6 +15,7 @@ Table of Contents
 12. [Running Static Website in GitLab](#running-static-website-in-gitlab)
 13. [Running Java Code in GitLab](#running-java-code-in-gitlab)
 14. [Deploying Node.js App to Server](#deploye-nodejs-app-to-server-virtualbox)
+15. [SSH Connection: Deploying to EC2]
  
 
 # 1. GitLab101
@@ -283,6 +284,67 @@ https://www.youtube.com/watch?v=ypbGz7kE-Bo
 # Deploye Node.js app to server (VirtualBox)
 https://www.youtube.com/watch?v=iQbENcbPtDo
 
+# SSH Connection
+1. Create a AWS EC2 instance 
+  ![ec2](https://github.com/jawad1989/GitLab101/blob/master/images/1%20Ec2%20instance.PNG)
+  
+2. Add Inbound Rule to Security Group
+   ![inboundRule](https://github.com/jawad1989/GitLab101/blob/master/images/2%20Security%20Groups.PNG)
+2. Install Apache LAMP Stack
+   ```
+   sudo yum update -y
+   sudo yum install -y httpd24 php72 mysql57-server php72-mysqlnd
+   sudo service httpd start
+   sudo chkconfig httpd on
+   chkconfig --list httpd
+   ```
+3. Verify Installation
+    ![ec2](https://github.com/jawad1989/GitLab101/blob/master/images/3%20Apache%20installed.PNG)
+4. Give rights to EC2-USER
+  ```
+  sudo chown -R ec2-user:ec2-user /var/www/html
+  ```
+5. Gitlab: make a variable for EC2 host and private key
+  ![variables](https://github.com/jawad1989/GitLab101/blob/master/images/4%20Variables.PNG)
+6. config ci file for GIT
+  ```
+  stages:
+    - build 
+    - deploy
+
+buildJob:
+    stage: build
+    image: alpine
+    before_script:
+        - apk add zip
+    script:
+        - mkdir public
+        - touch public/index.html
+        - echo "<h1> New Deployment </h1>" >> public/index.html
+        - zip -r public.zip public
+    artifacts:
+        paths:
+            - public.zip
+        
+deployJob:
+    stage: deploy
+    image: alpine
+    before_script:
+        - apk add openssh-client
+        - eval $(ssh-agent -s)
+        - echo "$STAGE_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+    script:
+        - scp -o StrictHostKeyChecking=no public.zip ec2-user@ec2-54-157-162-21.compute-1.amazonaws.com:/var/www/html
+        - ssh -o StrictHostKeyChecking=no ec2-user@ec2-54-157-162-21.compute-1.amazonaws.com "cd /var/www/html; touch foo.txt; unzip public.zip"
+
+  ```
+7. Running Pipeline
+  ![Pipeline](https://github.com/jawad1989/GitLab101/blob/master/images/5%20pipeline.PNG)
+8. Vertification
+  ![sucess](https://github.com/jawad1989/GitLab101/blob/master/images/6%20succes.PNG)
+  
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
