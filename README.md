@@ -1,8 +1,21 @@
 Table of Contents
 
 1. Introduction to GIT
-2. Continuous Integration
-3. [Continuous Delivery](https://github.com/jawad1989/GitLab101#continuous-delivery)
+2. [Continuous Integration](#continuous-integration)
+3. [Continuous Delivery](#continuous-delivery)
+4. [Continuous Deployment](#continuous-deployment)
+5. [Introduction to GitLab CI/CD](#introduction-to-gitlab-cicd)
+6. [GitLab Runner](#gitlab-runner)
+   * [Installing and Configuration](#installing-and-configuring-a-runner)
+7. [What is GITLAB-CI.yml](#gitlab-ciyml)
+8. [Part1: Creating Your First CICD Pipeline](#create-your-first-ci-cd-pipeline)
+9. [Part2: Create a CI Pipeline for Go Lang](#part-2-create-a-ci-pipeline-for-go-lang)
+10. [Part3: Adding CD](#part-3-add-cd)
+11. [Running Jobs in Parallel](#running-jobs-in-parallel)
+12. [Running Static Website in GitLab](#running-static-website-in-gitlab)
+13. [Running Java Code in GitLab](#running-java-code-in-gitlab)
+14. [Deploying Node.js App to Server](Virtual Box)
+ 
 
 # 1. GitLab101
 
