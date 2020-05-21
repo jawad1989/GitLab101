@@ -1,9 +1,10 @@
-# GitLab101
-
 Table of Contents
 
 1. Introduction to GIT
+2. Continuous Integration
+3. [Continuous Delivery](https://github.com/jawad1989/GitLab101#continuous-delivery)
 
+# 1. GitLab101
 
 GitLab is the first single application for software development, security, and operations that enables Concurrent DevOps, making the software lifecycle faster and radically improving the speed of business.
 
