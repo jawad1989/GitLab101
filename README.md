@@ -15,7 +15,7 @@ Table of Contents
 12. [Running Static Website in GitLab](#running-static-website-in-gitlab)
 13. [Running Java Code in GitLab](#running-java-code-in-gitlab)
 14. [Deploying Node.js App to Server](#deploye-nodejs-app-to-server-virtualbox)
-15. [SSH Connection: Deploying to EC2](#https://github.com/jawad1989/GitLab101#ssh-connectionx)
+15. [SSH Connection: Deploying to EC2](#ssh-connectionx)
  
 
 # 1. GitLab101
