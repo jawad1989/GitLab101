@@ -341,8 +341,11 @@ deployJob:
 
   ```
 7. Running Pipeline
+
   ![Pipeline](https://github.com/jawad1989/GitLab101/blob/master/images/5%20pipeline.PNG)
+  
 8. Vertification
+
   ![sucess](https://github.com/jawad1989/GitLab101/blob/master/images/6%20succes.PNG)
   
 ## GitLab Registery 
