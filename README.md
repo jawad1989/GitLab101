@@ -348,6 +348,37 @@ deployJob:
 
   ![sucess](https://github.com/jawad1989/GitLab101/blob/master/images/6%20succes.PNG)
   
+# Building Docker Images and Adding to Docker Registery
+1. Docker File
+
+```
+FROM nginx:alpine
+COPY ./public /usr/share/nginx/html
+```
+
+2. Gitlab ci File
+```
+stages:
+    - build
+    
+# This file is a template, and might need editing before it works on your project.
+docker-build-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+```
+3. Container Registery successful once pipeline completes
+![containerRegistery](https://github.com/jawad1989/GitLab101/blob/master/images/container-registery.PNG)
+
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
