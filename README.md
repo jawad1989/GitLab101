@@ -1,6 +1,6 @@
 Table of Contents
 
-1. Introduction to GIT
+1. [Introduction to GIT](#gitlab101)
 2. [Continuous Integration](#continuous-integration)
 3. [Continuous Delivery](#continuous-delivery)
 4. [Continuous Deployment](#continuous-deployment)
@@ -14,7 +14,7 @@ Table of Contents
 11. [Running Jobs in Parallel](#running-jobs-in-parallel)
 12. [Running Static Website in GitLab](#running-static-website-in-gitlab)
 13. [Running Java Code in GitLab](#running-java-code-in-gitlab)
-14. [Deploying Node.js App to Server](Virtual Box)
+14. [Deploying Node.js App to Server](#deploye-nodejs-app-to-server-virtualbox)
  
 
 # 1. GitLab101
