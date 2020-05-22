@@ -493,7 +493,56 @@ Uploading artifacts for successful job
  Uploading artifacts to coordinator... ok            id=562873680 responseStatus=201 Created token=cnWFqn39
  Job succeeded
 ```
+# Car Assembly Pipeline
 
+```
+stages:
+  - prep
+  - build
+  - test
+
+preparing the file:
+  stage: prep
+  script:
+    - mkdir build
+    - cd build
+    - touch car.txt
+  artifacts:
+    paths:
+     - build/
+
+build the car:
+  stage: build
+  script:
+    - cd build
+    - echo "jawad" >> car.txt
+    - echo "saleem" >> car.txt
+    - echo "hhsc" >> car.txt
+  artifacts:
+     paths:
+      - build/
+    
+author:
+  stage: build
+  script:
+    - mkdir meta
+    - cd meta
+    - echo $GITLAB_USERNAME > author.txt
+  artifacts:
+    paths:
+      - meta/
+      
+test the car:
+  stage: test
+  script:
+      - test -f build/car.txt
+      - cd build
+      - cat car.txt
+      - grep "jawad" car.txt # used for searching lines that matcha regular expressions
+      - grep "saleem" car.txt
+      - grep "hhsc" car.txt
+
+```
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
