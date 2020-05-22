@@ -17,8 +17,10 @@ Table of Contents
 14. [Deploying Node.js App to Server](#deploye-nodejs-app-to-server-virtualbox)
 15. [SSH Connection: Deploying to EC2](#ssh-connectionx)
 16. [Building Docker images/Docker Registery with Gitlab CI ](#building-docker-images-and-adding-to-docker-registery)
-17. [Run Unit Test on HTML using Tidy and then deploy](#)
+17. [Run Unit Test on HTML using Tidy and then deploy](#run-unit-test-on-html-using-tidy-and-then-deploy)
 18. [Car Assembly Pipeline](#car-assembly-pipeline)
+*********************
+
 # 1. GitLab101
 
 GitLab is the first single application for software development, security, and operations that enables Concurrent DevOps, making the software lifecycle faster and radically improving the speed of business.
