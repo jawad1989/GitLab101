@@ -545,6 +545,48 @@ test the car:
       - grep "hhsc" car.txt
 
 ```
+# Build Site with Gatsby
+
+## 1. Install gatsby on localhost
+
+   Source: https://www.gatsbyjs.org/docs/quick-start/
+    
+   ### * Install the Gatsby CLI
+    ```
+    npm install -g gatsby-cli
+    ```
+   ###  * Crate a new site
+   ```
+   gatsby new gatsby-site
+   ```
+   ### * Change directories into site folder
+   ```
+   cd gatsby-site
+   ```
+   ### Start Development Server
+   ```
+   gatsby develop
+   ```
+   > Gatsby will start a hot-reloading development environment accessible by default at http://localhost:8000.
+  
+  ![GATSby server](https://github.com/jawad1989/GitLab101/blob/master/images/1%20-%20Gatsby%20Server.PNG)
+  
+  
+  > Try editing the JavaScript pages in src/pages. Saved changes will live reload in the browser.
+   
+   ### Create a production build
+   ```
+   gatsby build
+   ```
+   
+   ### push code to Gitlab Repository
+   
+   * Create a project on Gitlab 
+   * Initiate git in installed gatsby directory
+   
+   ![GATSby server](https://github.com/jawad1989/GitLab101/blob/master/images/2%20-push%20site.PNG)
+
+
 ## GitLab Registery 
 ### Useful Resources
 More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
