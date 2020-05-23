@@ -586,6 +586,36 @@ test the car:
    
    ![GATSby server](https://github.com/jawad1989/GitLab101/blob/master/images/2%20-push%20site.PNG)
 
+   ### Create .gitlab-ci.yml file in Visaual Code
+   * Open visual Code and the project
+   * Add a new file `gitlab-ci.yml`
+     ```
+     build website:
+      image: node
+      script:
+        - npm install
+        - npm install -g gatsby-cli
+        - gatsby build
+     ```
+   * Commit and push the code from visual code
+    ![CommitPush](https://github.com/jawad1989/GitLab101/blob/master/images/3%20-%20Commit%20and%20push.PNG)
+    
+   * pipeline will complete
+   ```
+   success Building static HTML for pages - 2.044s - 4/4 1.96/s
+   success Generating image thumbnails - 18.859s - 6/6 0.32/s
+   success onPostBuild - 0.001s
+   info Done building in 34.868272024 sec
+    Running after_script
+    00:02
+    Saving cache
+    00:01
+    Uploading artifacts for successful job
+    00:02
+   Job succeeded
+   ```
+  > if build fails on Gitlab CI, use the latest LTS Node.js version like this:
+  > image: node:10
 
 ## GitLab Registery 
 ### Useful Resources
