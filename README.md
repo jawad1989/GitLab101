@@ -653,7 +653,7 @@ test artifact:
     - grep "GatsbyAsda" ./public/index.html
     
    ```
-   ## Add a new job to test the website
+   ## Running Jobs in Parallel and in Background
    
    in this job we will install node image, install npm packages and curl the server/
    
@@ -687,17 +687,133 @@ test website http:
     - npm install -g gatsby-cli
     - gatsby serve & # this will run this command in background and will release for next command
     - sleep 3 # add a pause
-    - curl "http://localhost:9000" | tac | tac | - grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
     
    ```
    
-   ### Why jobs fail
+   ## Why jobs fail
    After a command is executed it will return exit status
    
    **0 - Job success**
  
    **1-255 = Job failed: exit code 1**
 
+## Deployment using surge.sh
+
+Surge has been built from the ground up for native web application publishing and is committed to being the best way for Front-End Developers to put HTML5 applications into production.
+
+1. First, ensure you have a recent version of Node.js
+
+2. Then, install Surge using npm by running the following command:
+
+```
+npm install --global surge
+```
+
+3. Now, run `surge` from within any directory, to publish that directory onto the web.
+
+https://surge.sh/help/getting-started-with-surge
+
+## Managing Secrets using enviornment variables
+goto Your project -> Settings - > CICD -> Variables
+here you can add key and value and save them.
+
+## Deployment using surge.sh and Gitlab CICD
+in this stage we will add a `deploy` stage and add a new job `deploy to surge` which will deploy our website on a domain that can be accessed from any where.
+
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy
+
+build website:
+  stage: build
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+  artifacts:
+    paths:
+      - ./public
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+
+test website http:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+    
+deploy to surge:
+  stage: deploy
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain jawadgitlab.surge.sh
+
+```
+## Adding Smoke test stage/Job
+
+In this stage we added a new stage and new job.
+In job we will use alpine image, install curl and use curl command to find a string in our domain
+
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy
+  - postDeployment
+
+build website:
+  stage: build
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+  artifacts:
+    paths:
+      - ./public
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+
+test website http:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+    
+deploy to surge:
+  stage: deploy
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain jawadgitlab.surge.sh
+
+deploy smoke test:
+  image: alpine
+  stage: postDeployment
+  script:
+    - apk add --no-cache curl
+    - curl "http://jawadgitlab.surge.com" | grep -q "Gatsby"
+
+```
 ## GitLab Registery 
 
 ### Useful Resources
