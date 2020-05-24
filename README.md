@@ -881,6 +881,32 @@ we can schedule pipelines by below method:
 
 ![schedule pipeline](https://github.com/jawad1989/GitLab101/blob/master/images/5%20-%20pipeline%20scehedule.PNG)
 
+# Cache pipeline Build Time
+
+Unline jenkins Gitlab takes more time to install the dependicies first, every job starts in a clean enviornment unline workspaces in jenkins.
+
+Cache can speed up the build times of jobs
+
+In our project w will enable cache and save the node dependencies in cache.
+
+```
+stages:
+  - build
+  - test
+  - deploy
+  - postDeployment
+
+cache: # global cache 
+  key: ${CI_COMMIT_REF_SLUG} # we can also define our branch name e.g. master
+  paths:
+    - node_modules/
+```
+
+We can also Clear Cache from Pipeline view-> `Clear Runner Cache`
+
+![Clear Cache](https://github.com/jawad1989/GitLab101/blob/master/images/6%20-%20Clear%20Runner%20Cache.PNG)
+
+
 ## GitLab Registery 
 
 ### Useful Resources
