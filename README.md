@@ -931,14 +931,15 @@ cache:
 
 In Gitlab CI it is possible to create jobs that are only executed when a specific condition is fulfilled. For example if we want to run a job only when the pipeline is triggered by a schedule, we can configure it with:
 
-only:
 ```
+only:
     - schedules
 ```
+
 The same goes the other way around. If you don't want to run a job when the pipeline is triggered by a scheduled run, simply add to the respective jobs:
 
-except:
 ```
+except:
     - schedules
 ```
 
