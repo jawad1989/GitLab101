@@ -19,6 +19,7 @@ Table of Contents
 16. [Building Docker images/Docker Registery with Gitlab CI ](#building-docker-images-and-adding-to-docker-registery)
 17. [Run Unit Test on HTML using Tidy and then deploy](#run-unit-test-on-html-using-tidy-and-then-deploy)
 18. [Car Assembly Pipeline](#car-assembly-pipeline)
+19. [Gatsby Example CI](#)
 *********************
 
 # 1. GitLab101
@@ -617,10 +618,91 @@ test the car:
   > if build fails on Gitlab CI, use the latest LTS Node.js version like this:
   > image: node:10
 
+  * Save data in artifacts 
+   We want to view the artifact once the job is completed for that add below code in your job
+   ```
+   artifacts:
+    paths:
+      - ./public
+   ```
+   
+   ![Job Artifact](https://github.com/jawad1989/GitLab101/blob/master/images/4-%20Job%20Artifact.PNG)
+   
+   ### Add Test Artifact Job
+   
+   ```
+   stages:
+  - build
+  - test
+
+build website:
+  stage: build
+  image: node
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+  artifacts:
+    paths:
+      - ./public
+
+test artifact:
+  stage: test
+  script:
+    - grep "Gatsby" ./public/index.html
+    - grep "GatsbyAsda" ./public/index.html
+    
+   ```
+   ## Add a new job to test the website
+   
+   in this job we will install node image, install npm packages and curl the server/
+   
+   ```
+   stages:
+  - build
+  - test
+
+build website:
+  stage: build
+  image: node
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+  artifacts:
+    paths:
+      - ./public
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+
+test website http:
+  image: node
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | - grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+    
+   ```
+   
+   ### Why jobs fail
+   After a command is executed it will return exit status
+   
+   **0 - Job success**
+ 
+   **1-255 = Job failed: exit code 1**
+
 ## GitLab Registery 
+
 ### Useful Resources
-More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
-https://about.gitlab.com/blog/2018/01/22/a-beginners-guide-to-continuous-integration/<br/>
-https://gitlab.com/gitlab-examples<br/>
-Self-Practice: Try JUnit with various test frameworks: https://docs.gitlab.com/ee/ci/junit_test_reports.html <br/>
-https://www.youtube.com/watch?v=l5705U8s_nQ&t=397
+* More Eamples can be seen at<br/> [GitLAB CICD](https://docs.gitlab.com/ee/ci/examples/README.html)<br/>
+* https://about.gitlab.com/blog/2018/01/22/a-beginners-guide-to-continuous-integration/<br/>
+* https://gitlab.com/gitlab-examples<br/>
+* Self-Practice: Try JUnit with various test frameworks: https://docs.gitlab.com/ee/ci/junit_test_reports.html <br/>
+* https://www.youtube.com/watch?v=l5705U8s_nQ&t=397
