@@ -814,6 +814,11 @@ deploy smoke test:
     - curl "http://jawadgitlab.surge.com" | grep -q "Gatsby"
 
 ```
+
+# Pre defined Variables
+
+https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+
 ## GitLab Registery 
 
 ### Useful Resources
