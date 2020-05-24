@@ -879,7 +879,7 @@ deploy smoke test:
 
 we can schedule pipelines by below method:
 
-~[schedule pipeline](https://github.com/jawad1989/GitLab101/blob/master/images/5%20-%20pipeline%20scehedule.PNG)
+![schedule pipeline](https://github.com/jawad1989/GitLab101/blob/master/images/5%20-%20pipeline%20scehedule.PNG)
 
 ## GitLab Registery 
 
