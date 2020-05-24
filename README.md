@@ -907,6 +907,126 @@ We can also Clear Cache from Pipeline view-> `Clear Runner Cache`
 ![Clear Cache](https://github.com/jawad1989/GitLab101/blob/master/images/6%20-%20Clear%20Runner%20Cache.PNG)
 
 
+## Cache Policy 
+
+The default cache behaviour in Gitlab CI is to download the files at the start of the job execution (pull), and to re-upload them at the end (push). This allows any changes made by the job to be persisted for future runs (known as the pull-push cache policy).
+
+Gitlab offers the possibility of defining how a job should work with cache by setting a policy. So if we want to skip uploading cache file, we can use the setting in the cache configuration
+
+```
+policy: pull
+```
+
+### Update CI file
+
+```
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+  policy: pull
+```
+
+# Running a pipeline and Job (Cache) only when scheduled
+
+In Gitlab CI it is possible to create jobs that are only executed when a specific condition is fulfilled. For example if we want to run a job only when the pipeline is triggered by a schedule, we can configure it with:
+
+only:
+```
+    - schedules
+```
+The same goes the other way around. If you don't want to run a job when the pipeline is triggered by a scheduled run, simply add to the respective jobs:
+
+except:
+```
+    - schedules
+```
+
+Updated Pipeline:
+
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy
+  - postDeployment
+  - cache
+
+cache: # global cache 
+  key: ${CI_COMMIT_REF_SLUG} # we can also define our branch name e.g. master
+  paths:
+    - node_modules/
+  policy: pull
+
+update cache:
+    stage: cache
+    script:
+        - npm install
+    cache: 
+      key: ${CI_COMMIT_REF_SLUG} 
+      paths:
+       - node_modules/
+    only:
+      - schdules # this will make the job run only when pipeline is scheduled
+
+build website:
+  stage: build
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+  except:
+    - schdules
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  cache: {} # diable cache
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+  except:
+    - schdules
+
+test website http:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+  except:
+    - schdules
+    
+deploy to surge:
+  stage: deploy
+  cache: {} # diable cache
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain jawadgitlab.surge.sh
+  except:
+    - schdules
+
+deploy smoke test:
+  image: alpine
+  cache: {} # diable cache
+  stage: postDeployment
+  script:
+    - apk add --no-cache curl
+    - curl "http://jawadgitlab.surge.sh" | grep -q "Gatsby"
+    - curl "http://jawadgitlab.surge.sh" | grep -q "$CI_COMMIT_SHORT_SHA"
+  except:
+    - schdules
+
+
+```
 ## GitLab Registery 
 
 ### Useful Resources
