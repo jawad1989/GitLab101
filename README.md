@@ -819,6 +819,68 @@ deploy smoke test:
 
 https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
 
+* In this example we used predefined varialbe `$CI_COMMIT_SHORT_SHA` which displays the current version
+* we added a variable in index.html file and named it `%%VERSION%%`
+* using `sed` we updated the text '%%VERSION%%' with our variable '$CI_COMMIT_SHORT_SHA'.
+* After this in `postDeployment` Stage we used grep to verify if version is placed on the index.html page
+
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy
+  - postDeployment
+
+build website:
+  stage: build
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+
+test website http:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+    
+deploy to surge:
+  stage: deploy
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain jawadgitlab.surge.sh
+
+deploy smoke test:
+  image: alpine
+  stage: postDeployment
+  script:
+    - apk add --no-cache curl
+    - curl "http://jawadgitlab.surge.sh" | grep -q "Gatsby"
+    - curl "http://jawadgitlab.surge.sh" | grep -q "$CI_COMMIT_SHORT_SHA"
+```
+
+# Schedule a Pipeline
+
+we can schedule pipelines by below method:
+
+~[schedule pipeline](https://github.com/jawad1989/GitLab101/blob/master/images/5%20-%20pipeline%20scehedule.PNG)
+
 ## GitLab Registery 
 
 ### Useful Resources
