@@ -20,6 +20,9 @@ Table of Contents
 17. [Run Unit Test on HTML using Tidy and then deploy](#run-unit-test-on-html-using-tidy-and-then-deploy)
 18. [Car Assembly Pipeline](#car-assembly-pipeline)
 19. [Gatsby Example CI](#)
+Running a pipeline and Job (Cache) only when scheduled
+[Cache vs Artifacs](#)
+[Adding more enviornments]
 *********************
 
 # 1. GitLab101
@@ -1035,6 +1038,292 @@ Create a new schedule and run the scheduled pipeline
 
 ![ScheduledJob](https://github.com/jawad1989/GitLab101/blob/master/images/8%20-%20See%20Jobs.png)
 
+
+# Cache vs Artifacs
+
+**Artifact:**
+
+* usually the out put of a build tool
+* can be used to pass data btw job/stages
+* designed to save compiled/generated part of build
+
+> e.g. we used `car.txt` in above examples
+
+
+**Cache:**
+
+* are not to be used to store build results
+* should only be used as a temporary storage for project dependencies
+
+
+# Enviornments:
+
+How to add a new enviornment (Production/Stage)
+* Enviornments allow you to control the CD/Deployment process
+* Easily track deployments
+* you will know exactly what was deployed on which enviornment
+* you will have full history of your deployments
+
+In our gitlab CI file we can add environment fields in `staging` and `production` job, once completed it will create these environmeents in GITLAB CI which can be access via our `Menu->Operations->Environments`
+
+```
+environment:
+    name: staging
+    url: http://jawadstaging.surge.sh
+
+environment:
+    name: production
+    url: http://jawadproduction.surge.sh
+
+```
+
+Compelte gitlab CI file:
+
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy staging
+  - test staging
+  - deploy production
+  - test production
+  - cache
+
+cache: # global cache 
+  key: ${CI_COMMIT_REF_SLUG} # we can also define our branch name e.g. master
+  paths:
+    - node_modules/
+  policy: pull
+
+update cache:
+    stage: cache
+    script:
+        - npm install
+    cache: 
+      key: ${CI_COMMIT_REF_SLUG} 
+      paths:
+       - node_modules/
+    only:
+      - schedules # this will make the job run only when pipeline is scheduled
+
+build website:
+  stage: build
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+  except:
+    - schedules
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  cache: {} # diable cache
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+  except:
+    - schedules
+
+test website http:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+  except:
+    - schedules
+    
+deploy to production:
+  stage: deploy production
+  cache: {} # diable cache
+  environment:
+    name: production
+    url: http://jawadproduction.surge.sh
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain jawadproduction.surge.sh
+  except:
+    - schedules
+
+test production:
+  image: alpine
+  cache: {} # diable cache
+  stage: test production
+  script:
+    - apk add --no-cache curl
+    - curl "http://jawadproduction.surge.sh" | grep -q "Gatsby"
+    - curl "http://jawadproduction.surge.sh" | grep -q "$CI_COMMIT_SHORT_SHA"
+  except:
+    - schedules
+
+
+deploy to staging:
+  stage: deploy staging
+  cache: {} # diable cache
+  environment:
+    name: staging
+    url: http://jawadstaging.surge.sh
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain jawadstaging.surge.sh
+  except:
+    - schedules
+
+test staging:
+  image: alpine
+  cache: {} # diable cache
+  stage: test staging
+  script:
+    - apk add --no-cache curl
+    - curl "http://jawadstaging.surge.sh" | grep -q "Gatsby"
+    - curl "http://jawadstaging.surge.sh" | grep -q "$CI_COMMIT_SHORT_SHA"
+  except:
+    - schedules
+
+
+```
+
+
+# defining variables
+
+we can create variables to be reused again, e.g. staging and production urls
+
+these will be accesses globally in the CI file:
+
+```
+variables:
+  STAGING_URL: jawadstaging.surge.sh
+  PRODUCTION_URL: jawadproduction.surge.sh
+
+```
+
+Full CI code:
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy staging
+  - test staging
+  - deploy production
+  - test production
+  - cache
+
+cache: # global cache 
+  key: ${CI_COMMIT_REF_SLUG} # we can also define our branch name e.g. master
+  paths:
+    - node_modules/
+  policy: pull
+
+variables:
+  STAGING_URL: jawadstaging.surge.sh
+  PRODUCTION_URL: jawadproduction.surge.sh
+
+  
+update cache:
+    stage: cache
+    script:
+        - npm install
+    cache: 
+      key: ${CI_COMMIT_REF_SLUG} 
+      paths:
+       - node_modules/
+    only:
+      - schedules # this will make the job run only when pipeline is scheduled
+
+build website:
+  stage: build
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+  except:
+    - schedules
+
+test artifact:
+  image: alpine # minimilistic image 5 mb
+  cache: {} # diable cache
+  stage: test
+  script:
+    - grep -q "Gatsby" ./public/index.html
+  except:
+    - schedules
+
+test website http:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve & # this will run this command in background and will release for next command
+    - sleep 3 # add a pause
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"  # output of curl will be given as input to grep; tac is a unix program that reads the entire input page, and when grep will run when curl will finish writing
+  except:
+    - schedules
+    
+deploy to production:
+  stage: deploy production
+  cache: {} # diable cache
+  environment:
+    name: production
+    url: http://$PRODUCTION_URL
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain $PRODUCTION_URL
+  except:
+    - schedules
+
+test production:
+  image: alpine
+  cache: {} # diable cache
+  stage: test production
+  script:
+    - apk add --no-cache curl
+    - curl "http://$PRODUCTION_URL" | grep -q "Gatsby"
+    - curl "http://$PRODUCTION_URL" | grep -q "$CI_COMMIT_SHORT_SHA"
+  except:
+    - schedules
+
+
+deploy to staging:
+  stage: deploy staging
+  cache: {} # diable cache
+  environment:
+    name: staging
+    url: http://$STAGING_URL
+  script: 
+    - npm install --global surge
+    - surge --project ./public --domain $STAGING_URL
+  except:
+    - schedules
+
+test staging:
+  image: alpine
+  cache: {} # diable cache
+  stage: test staging
+  script:
+    - apk add --no-cache curl
+    - curl "http://$STAGING_URL" | grep -q "Gatsby"
+    - curl "http://$STAGING_URL" | grep -q "$CI_COMMIT_SHORT_SHA"
+  except:
+    - schedules
+
+
+```
 ## GitLab Registery 
 
 ### Useful Resources
