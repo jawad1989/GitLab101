@@ -1354,6 +1354,33 @@ Pipeline Running after manual trigger
 https://docs.gitlab.com/ee/ci/yaml/#whenmanual
 https://docs.gitlab.com/ee/ci/yaml/#allow_failure
 
+
+# Merge Requests - Using Branches
+
+**Using Branches:**
+
+* each feature/task/bugfix could be done on a separate branch
+* once tested and reviewed, it can be merged back into master
+
+**Branching Models:**
+ 
+ * most known strategy is using gitFlow
+ * use any strategy just dont use only one branch
+ 
+ Merge requests - What is a Merge Request?
+Merge Requests are a good way to visualize new changes that are about to be made in master
+
+![Merge](https://github.com/jawad1989/GitLab101/blob/master/images/merge%20request%20-%20a.png)
+
+and see the status of the pipeline for a specific branch
+
+![Merge](https://github.com/jawad1989/GitLab101/blob/master/images/merge%20request%20-%20b.png)
+
+but also to give other developers the possibility of giving their feedback regarding a feature/fix before it gets merge into master.
+ 
+![Merge](https://github.com/jawad1989/GitLab101/blob/master/images/merge%20request%20-%20c.png)
+
+
 ## GitLab Registery 
 
 ### Useful Resources
