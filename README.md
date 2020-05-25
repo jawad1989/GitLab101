@@ -1028,6 +1028,13 @@ deploy smoke test:
 
 
 ```
+
+Create a new schedule and run the scheduled pipeline
+
+![Scheduled](https://github.com/jawad1989/GitLab101/blob/master/images/7%20-%20Schedule%20Cache.png)
+
+![ScheduledJob](https://github.com/jawad1989/GitLab101/blob/master/images/8%20-%20See%20Jobs.png)
+
 ## GitLab Registery 
 
 ### Useful Resources
