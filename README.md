@@ -20,9 +20,11 @@ Table of Contents
 17. [Run Unit Test on HTML using Tidy and then deploy](#run-unit-test-on-html-using-tidy-and-then-deploy)
 18. [Car Assembly Pipeline](#car-assembly-pipeline)
 19. [Gatsby Example CI](#)
-Running a pipeline and Job (Cache) only when scheduled
-[Cache vs Artifacs](#)
-[Adding more enviornments]
+* [Cache vs Artifacs](#)
+* [Adding more enviornments]
+* Adding Global Variables
+* Manually Triggering jobs / Manual Deployments
+
 *********************
 
 # 1. GitLab101
@@ -1324,6 +1326,34 @@ test staging:
 
 
 ```
+
+# Manually Triggering jobs/ Manual Deployments
+
+adding ` when: manual` in job waits for the manual intervention of user/admin
+
+add below code in `deploy production` job, this will wait for us to manually accept the job in pipeline view.
+
+```
+ when: manual
+ allow_failure: false
+```
+
+Pipeline  status blocked
+
+![Blocked](https://github.com/jawad1989/GitLab101/blob/master/images/7%20-%20pipeline%20waiting.PNG)
+
+Pipeline waitng for action
+
+![WAiting](https://github.com/jawad1989/GitLab101/blob/master/images/7b.PNG)
+
+Pipeline Running after manual trigger
+
+![Triggered](https://github.com/jawad1989/GitLab101/blob/master/images/7c.PNG)
+
+## References:
+https://docs.gitlab.com/ee/ci/yaml/#whenmanual
+https://docs.gitlab.com/ee/ci/yaml/#allow_failure
+
 ## GitLab Registery 
 
 ### Useful Resources
