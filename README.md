@@ -26,6 +26,7 @@ Table of Contents
 * Manually Triggering jobs / Manual Deployments
 * Configure Merge Branch
 * Only merge request parameter
+* Dynamic Branches
 
 *********************
 
@@ -1428,6 +1429,12 @@ we can optionally add below parameter in our job to run it only when a merge req
 only:
   - merge_requests
 ```
+
+# Dynamic Branches
+
+As we actually work with multiple branches at a time, we need to dynamically create enviornments for each branch
+
+
 ## GitLab Registery 
 
 ### Useful Resources
