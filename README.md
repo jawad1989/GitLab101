@@ -24,6 +24,7 @@ Table of Contents
 * [Adding more enviornments]
 * Adding Global Variables
 * Manually Triggering jobs / Manual Deployments
+* Configure Merge Branch
 
 *********************
 
@@ -1379,6 +1380,20 @@ and see the status of the pipeline for a specific branch
 but also to give other developers the possibility of giving their feedback regarding a feature/fix before it gets merge into master.
  
 ![Merge](https://github.com/jawad1989/GitLab101/blob/master/images/merge%20request%20-%20c.png)
+
+
+# Configure Merge Branch
+
+We can configure our merge branch in many ways i.e.
+* Allowing no one to push to master 'Settings->Repositories->protected branch'
+
+![no one push](https://github.com/jawad1989/GitLab101/blob/master/images/merge-allow-no%20one%20to%20push.PNG)
+
+
+* Chaning merge methods `Setting->General->Merge Methods`
+
+![Fast Forward](https://github.com/jawad1989/GitLab101/blob/master/images/merge-fast-forward-merge.PNG)
+
 
 
 ## GitLab Registery 
