@@ -19,14 +19,32 @@ Table of Contents
 16. [Building Docker images/Docker Registery with Gitlab CI ](#building-docker-images-and-adding-to-docker-registery)
 17. [Run Unit Test on HTML using Tidy and then deploy](#run-unit-test-on-html-using-tidy-and-then-deploy)
 18. [Car Assembly Pipeline](#car-assembly-pipeline)
-19. [Gatsby Example CI](#)
-* [Cache vs Artifacs](#)
-* [Adding more enviornments]
-* Adding Global Variables
-* Manually Triggering jobs / Manual Deployments
-* Configure Merge Branch
-* Only merge request parameter
-* Dynamic Branches
+19. [Gatsby Example CI](#build-site-with-gatsby)
+  * [Installing Gatsby on local host](#1-install-gatsby-on-localhost)
+  * [Production build](#create-a-production-build)
+  * [Push Code to Gitlab Repo](#push-code-to-gitlab-repository)
+  * [Visual Code creating gitlab ci](#create-gitlab-ciyml-file-in-visaual-code)
+  * [Adding test artifact Job](#add-test-artifact-job)
+20.  [Running Jobs in Background and Parallel](#running-jobs-in-parallel-and-in-background)
+21. [Why jobs fail](#why-jobs-fail)
+22. [Deployment using surge.sh](#deployment-using-surgesh)
+23. [Managing secrets in variables](#managing-secrets-using-enviornment-variables)
+24. [Adding surge.sh deployment in Gitlab CICD](#deployment-using-surgesh-and-gitlab-cicd)
+25. [Adding Smoke Test Stage/Job](#adding-smoke-test-stagejob)
+26. [Using pre defined variables](#pre-defined-variables)
+27. [Schedule a pipeline](#schedule-a-pipeline)
+28. [Cache pipeline Build Time](#cache-pipeline-build-time)
+29. [Running Scheduled Pipeline cache example](#running-a-pipeline-and-job-cache-only-when-scheduled)
+30. [Cache Vs Artifacts](#cache-vs-artifacs)
+31. [Understanding Environments](#enviornments)
+32. [Adding variables in Gitlab CI file](#defining-variables)
+33. [Manual Deployments/Trigger Jobs](#manually-triggering-jobs-manual-deployments)
+34. [Merge Requests - Using Branches](#merge-requests---using-branches)
+35. [Configuring Merge Branches](#configure-merge-branch)
+36. [Creating A merge Request in Gitlab](#creating-a-merge-request)
+37. [Only Merge Request Parameter](#only-merge-request-parameter)
+38. [Dynamic Enviornments](#dynamic-branches)
+
 
 *********************
 
