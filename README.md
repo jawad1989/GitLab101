@@ -25,6 +25,7 @@ Table of Contents
 * Adding Global Variables
 * Manually Triggering jobs / Manual Deployments
 * Configure Merge Branch
+* Only merge request parameter
 
 *********************
 
@@ -1394,8 +1395,39 @@ We can configure our merge branch in many ways i.e.
 
 ![Fast Forward](https://github.com/jawad1989/GitLab101/blob/master/images/merge-fast-forward-merge.PNG)
 
+# Creating a merge request
+
+1. Goto Repositories->Branches
+2. Create a new branch i.e. `feature/add-title`
+  * a new pipeline will be created
+  ![New branch](https://github.com/jawad1989/GitLab101/blob/master/images/1-%20add%20branch.PNG)
+3. Once pipeline is completed, make a change in website, change the title of index.html in new branch
+  ![MErge REquest](https://github.com/jawad1989/GitLab101/blob/master/images/8%20-%20merge%20request.PNG)
+  
+4. Add some comments and select delete pipeline after merge option
+![delete branch](https://github.com/jawad1989/GitLab101/blob/master/images/8%20-%20merge%20update%20delete%20branch.PNG)
+
+click on `merge when pipeline succeeds`
+
+![Merge Sucess](https://github.com/jawad1989/GitLab101/blob/master/images/8%20-%20mergepipeline.PNG)
+
+After clicking
+
+![After clicking](https://github.com/jawad1989/GitLab101/blob/master/images/8%20-%20merge%20request%20success.PNG)
+
+After merge is complete, master piepline will run 
+
+![master](https://github.com/jawad1989/GitLab101/blob/master/images/8%20merge%20after%20success%20merge.PNG)
 
 
+# only merge request parameter 
+
+we can optionally add below parameter in our job to run it only when a merge request is performed
+
+```
+only:
+  - merge_requests
+```
 ## GitLab Registery 
 
 ### Useful Resources
