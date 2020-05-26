@@ -1715,6 +1715,156 @@ person:
    }
 }
 ```
+
+# Templates in YAML/Gitlab CI file:
+
+We can observe our stagin and production deploy job have few tasks in commmon we can create a YAML template as below:
+
+The main power of template is writing less code and reusing more, lets say we have alot of environments we can simply write a template for common tasks and use that.
+
+```
+.deploy_template: &deploy
+  only:
+    - master
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain $DOMAIN
+  environment:
+    url: http://$DOMAIN
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy review
+  - deploy staging
+  - staging tests
+  - deploy production
+  - production tests
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+variables:
+  STAGING_DOMAIN: jawad-staging.surge.sh
+  PRODUCTION_DOMAIN: jawad-production.surge.sh
+
+build website:
+  stage: build
+  only:
+    - master
+    - merge_requests
+  before_script:
+    - echo "im before script"
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+      
+test artifact:
+  image: alpine
+  stage: test
+  only:
+    - master
+    - merge_requests
+  script:
+    - grep -q "Gatsby" ./public/index.html
+
+test website:
+  stage: test
+  only:
+    - master
+    - merge_requests
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve &
+    - sleep 3
+  after_script:
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
+
+deploy review:
+  stage: deploy review
+  only:
+    - merge_requests
+  environment:
+      name: review/$CI_COMMIT_REF_NAME
+      url: https://jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+      on_stop: stop review
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+
+stop review:
+  stage: deploy review
+  only:
+    - merge_requests
+  variables:
+    GIT_STRATERGY: none
+  script:
+    - npm install -global surge
+    - surge teardown jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+
+.deploy_template: &deploy
+  only:
+    - master
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain $DOMAIN
+  environment:
+    url: http://$DOMAIN
+
+deploy staging: 
+  <<: *deploy
+  variables:
+    DOMAIN: $STAGING_DOMAIN
+  stage: deploy staging
+  environment:
+    name: staging
+    
+  
+deploy production: 
+  <<: *deploy
+  stage: deploy production
+  variables:
+    DOMAIN: $PRODUCTION_DOMAIN
+  environment:
+    name: production
+
+
+staging tests:
+  image: alpine
+  stage: staging tests
+  only:
+    - master  
+  script:
+    - apk add --no-cache curl
+    - curl -s "https://$STAGING_DOMAIN" | grep -q "Hi people"
+    - curl -s "https://$STAGING_DOMAIN" | grep -q "$CI_COMMIT_SHORT_SHA"
+    
+production tests:
+  image: alpine
+  stage: production tests
+  only:
+    - master  
+  script:
+    - apk add --no-cache curl
+    - curl -s "https://$PRODUCTION_DOMAIN" | grep -q "Hi people"
+    - curl -s "https://$PRODUCTION_DOMAIN" | grep -q "$CI_COMMIT_SHORT_SHA"
+```
+complete code:
 ## GitLab Registery 
 
 ### Useful Resources
