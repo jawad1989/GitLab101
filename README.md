@@ -1634,8 +1634,87 @@ project: https://gitlab.com/jawadxiv/gtasby-surge
   image: alpine
   stage: production tests
  ```
+ * Anchors in YAML
+ ```
+ person:
+   name: &fname Jawad
+   age: 30
+   isMale: true
+   friends:
+     - name: John
+       age: 30
+     - name: Sara
+       age: 28
+   self: *fname
+ ```
+ if we convert above yaml to json, below will be the output:
+ ```
+ {
+   "person": {
+      "name": "Jawad",
+      "age": 30,
+      "isMale": true,
+      "friends": [
+         {
+            "name": "John",
+            "age": 30
+         },
+         {
+            "name": "Sara",
+            "age": 28
+         }
+      ],
+      "self": "Jawad"
+   }
+}
+```
+
+another example:
+```
+base_person: &base
+  city: nyc
+  country: usa
+
+person:
+   <<: *base
+   name: &fname Jawad
+   age: 30
+   isMale: true
+   friends:
+     - name: John
+       age: 30
+     - name: Sara
+       age: 28
+   self: *fname
+ ```
  
- 
+ if we convert above yaml to json, below will be the output:
+ ```
+ {
+   "base_person": {
+      "city": "nyc",
+      "country": "usa"
+   },
+   "person": {
+      "city": "nyc",
+      "country": "usa",
+      "name": "Jawad",
+      "age": 30,
+      "isMale": true,
+      "friends": [
+         {
+            "name": "John",
+            "age": 30
+         },
+         {
+            "name": "Sara",
+            "age": 28
+         }
+      ],
+      "self": "Jawad"
+   }
+}
+```
 ## GitLab Registery 
 
 ### Useful Resources
