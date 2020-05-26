@@ -1452,7 +1452,190 @@ only:
 
 As we actually work with multiple branches at a time, we need to dynamically create enviornments for each branch
 
+1. create a job with dynamic environment 
+2. goto branches and create a new branch
+3. do some changes i.e. chanes index.html
+4. create a merge request
+5. now pipleine with `merge_requests only` will run
+6. verify the dynamic enviornment is running
+7. complete the merge
 
+* make sure surge variables are un protected
+
+
+for creating dynamic branche we can use below code in gitlab ci by using these predefined variables `CI_COMMIT_REF_NAME` and `CI_ENVIRONMENT_SLUG`.
+
+and also once we have created a merge request and dynamic enviornment we can also create a job to stop/terminate the new dynamic environment
+
+```
+deploy review:
+  stage: deploy review
+  only:
+    - merge_requests
+  environment:
+      name: review/$CI_COMMIT_REF_NAME
+      url: https://jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+      on_stop: stop review
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+    
+stop review:
+  stage: deploy review
+  only:
+    - merge_requests
+  variables:
+    GIT_STRATERGY: none
+  script:
+    - npm install -global surge
+    - surge teardown jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+```
+
+
+
+complete code:
+```
+image: node
+
+stages:
+  - build
+  - test
+  - deploy review
+  - deploy staging
+  - staging tests
+  - deploy production
+  - production tests
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+variables:
+  STAGING_DOMAIN: jawad-staging.surge.sh
+  PRODUCTION_DOMAIN: jawad-production.surge.sh
+
+build website:
+  stage: build
+  only:
+    - master
+    - merge_requests
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+      
+test artifact:
+  image: alpine
+  stage: test
+  only:
+    - master
+    - merge_requests
+  script:
+    - grep -q "Gatsby" ./public/index.html
+
+test website:
+  stage: test
+  only:
+    - master
+    - merge_requests
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve &
+    - sleep 3
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
+
+deploy review:
+  stage: deploy review
+  only:
+    - merge_requests
+  environment:
+      name: review/$CI_COMMIT_REF_NAME
+      url: https://jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+      on_stop: stop review
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+
+stop review:
+  stage: deploy review
+  only:
+    - merge_requests
+  variables:
+    GIT_STRATERGY: none
+  script:
+    - npm install -global surge
+    - surge teardown jawad-$CI_ENVIRONMENT_SLUG.surge.sh
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+
+deploy staging: 
+  stage: deploy staging
+  environment:
+    name: staging
+    url: http://$STAGING_DOMAIN
+  only:
+    - master  
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain $STAGING_DOMAIN
+
+deploy production: 
+  stage: deploy production
+  environment:
+    name: production
+    url: http://$PRODUCTION_DOMAIN
+  only:
+    - master    
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain $PRODUCTION_DOMAIN
+
+staging tests:
+  image: alpine
+  stage: staging tests
+  only:
+    - master  
+  script:
+    - apk add --no-cache curl
+    - curl -s "https://$STAGING_DOMAIN" | grep -q "Hi people"
+    - curl -s "https://$STAGING_DOMAIN" | grep -q "$CI_COMMIT_SHORT_SHA"
+    
+production tests:
+  image: alpine
+  stage: production tests
+  only:
+    - master  
+  script:
+    - apk add --no-cache curl
+    - curl -s "https://$PRODUCTION_DOMAIN" | grep -q "Hi people"
+    - curl -s "https://$PRODUCTION_DOMAIN" | grep -q "$CI_COMMIT_SHORT_SHA"
+```
+project: https://gitlab.com/jawadxiv/gtasby-surge
+
+# understanding YAML
+
+* How to disable jobs
+ just add a `.` before job
+ ```
+ .production tests:
+  image: alpine
+  stage: production tests
+ ```
+ 
+ 
 ## GitLab Registery 
 
 ### Useful Resources
