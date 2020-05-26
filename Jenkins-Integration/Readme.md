@@ -47,3 +47,27 @@
  
 # 6. Example Changing Status to Closed from Open
 pending 
+
+# 7. Gitlab Jira DEvelopement Panel Integration - Silver Gold plans
+ONLY AVAILABLE: `GOLD` and `SILVER`
+
+* in this integration you can see the gitlab's merge/branch/commit counts in JIRA issues but its only available in SILVER and GOLD plans
+> https://docs.gitlab.com/ee/integration/jira_development_panel.html
+
+Steps to integrate
+
+1. Click your `avatar->settings->Applications`
+2. Create a new application
+  ![new app](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/create-a-application-2.PNG)
+  
+  ![app craeed](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/create-a-application.PNG)
+  
+3. Get the group name or create a new group with some projects in gitlab
+![group-gitlab](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/create-a-group.PNG)
+
+4. goto manage dvcs and setup gitlab app's group
+
+link: https://jawadhhsc.atlassian.net/secure/admin/ConfigureDvcsOrganizations!default.jspa
+
+![gitlab-dvcs](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/manage-dvs.PNG)
+
