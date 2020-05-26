@@ -81,3 +81,14 @@ link: https://jawadhhsc.atlassian.net/secure/admin/ConfigureDvcsOrganizations!de
 
 ![gitlab-dvcs](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/manage-dvs.PNG)
 
+
+
+# Resources:
+https://www.youtube.com/watch?v=SwR-g1s1zTo
+https://docs.gitlab.com/ee/integration/jira_development_panel.html
+https://gitlab.com/gitlab-org/gitlab/blob/8-13-stable-ee/doc/project_services/jira.md
+https://docs.gitlab.com/ee/user/project/integrations/jira.html
+https://gitlab.com/gitlab-org/gitlab/-/issues/8185
+https://www.youtube.com/watch?v=y74brTo5EBA&t=469s
+https://jawadhhsc.atlassian.net/login/oauth/callback
+https://jawadhhsc.atlassian.net/rest/api/2/issue/TIER-2/transitions
