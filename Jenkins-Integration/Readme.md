@@ -35,14 +35,15 @@
  you will see the end result says close TIER-6 
  ![close-tier6](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/merge-request.PNG)
  
- 3. Once you pressed murge you will see once merge-request in in progress it will add the new comment in jira
+#  3. Once you pressed murge you will see once merge-request in in progress it will add the new comment in jira
  
  ![mergre-requst](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/commit-tier6.PNG)
  
- 4. Once merge is complete you will see the status changed 'TIER6 Closed' in gitlab
+#  4. Once merge is complete you will see the status changed 'TIER6 Closed' in gitlab
  ![tatu-closed](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/closed-tier6-gitlab.PNG)
  
- 5. You can also see the issue moved to Done(closed)
+#  5. You can also see the issue moved to Done(closed)
  ![jira-closed](https://github.com/jawad1989/GitLab101/blob/master/Jenkins-Integration/images/closed-jira.PNG)
  
-# 4. Example Changing Status to Done from Open
+# 6. Example Changing Status to Closed from Open
+pending 
