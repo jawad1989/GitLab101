@@ -414,4 +414,4 @@ deploy to aws:
 
 ```
 
-![pipelin] (https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-up.PNG)
+![pipelin](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-up.PNG)
