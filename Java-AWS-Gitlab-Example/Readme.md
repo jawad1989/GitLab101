@@ -17,9 +17,11 @@ In this example we will use  a JAVA application in GITLAB to perform CICD
  [Download collection](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/Postman%20collection.rar)
 
   ## 4.1. Add a car
+  
   ![Add Car](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/add-car.PNG)
   
   ## 4.2. Get all Cars
+  
   ![get all cars](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/get-all-cars.PNG)
   
 # 5. Build/Test Java project locally
@@ -56,9 +58,13 @@ build:
   * Commit the file
   * Push the file(add remote origin in intelliJ)
   * This will run the pipeline in Gitlab
+  
   ![build pipleine](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/gitlab-pipeline.PNG)
+  
   * check the artifacts for build file (.jar)
+  
   ![build file](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifacts.PNG)
+  
   
   
  
