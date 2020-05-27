@@ -342,3 +342,8 @@ Uploading artifacts for failed job
   
   ![permission](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/elastic-bean-permission-iam.PNG)
  
+ ![S3](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/success-pipeline.PNG)
+ 
+ ![S3](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/success-env.PNG)
+ 
+ ![S3 success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/success-s3.PNG)
