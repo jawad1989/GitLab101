@@ -347,3 +347,71 @@ Uploading artifacts for failed job
  ![S3](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/success-env.PNG)
  
  ![S3 success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/success-s3.PNG)
+
+# 10. Getting info API to run
+we will update our code to get the info like env version from API in postman
+below are the changes that need to be done in gitlab ci
+
+***build***
+```
+build:
+  stage: build
+  image: openjdk:12-alpine
+  script:
+    - sed -i "s/CI_PIPELINE_IID/$CI_PIPELINE_IID/" ./src/main/resources/application.yml
+    - sed -i "s/CI_COMMIT_SHORT_SHA/$CI_COMMIT_SHORT_SHA/" ./src/main/resources/application.yml
+    - sed -i "s/CI_COMMIT_BRANCH/$CI_COMMIT_BRANCH/" ./src/main/resources/application.yml
+    - ./gradlew build
+    - mv ./build/libs/cars-api.jar ./build/libs/$ARTIFACT_NAME
+  artifacts:
+    paths:
+      - ./build/libs/
+```
+
+***Deploy***
+```
+deploy to aws:
+  stage: deploy
+  image:
+    name: banst/awscli # un official docker image
+    entrypoint: [""]
+  before_script:
+    - apk --no-cache add curl
+    - apk --no-cache add jq #parse json in cli
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=$S3_BUCKET,S3Key=$ARTIFACT_NAME
+    - CNAME=$(aws elasticbeanstalk update-environment --application-name $APP_NAME --environment-name "CarsApi-env" --version-label=$CI_PIPELINE_IID | jq '.CNAME' --raw-output)
+    - sleep 45
+    - curl http://$CNAME/actuator/info | grep $CI_PIPELINE_IID
+    - curl http://$CNAME/actuator/health | grep "UP"
+```
+
+after pipelines gets complete you can view the status in postman:
+![postman](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/info-api.PNG)
+
+# 11. Testing the app version in deploy stage
+
+below code will grep the app version and status from deployed pipeline
+```
+deploy to aws:
+  stage: deploy
+  image:
+    name: banst/awscli # un official docker image
+    entrypoint: [""]
+  before_script:
+    - apk --no-cache add curl
+    - apk --no-cache add jq #parse json in cli
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=$S3_BUCKET,S3Key=$ARTIFACT_NAME
+    - CNAME=$(aws elasticbeanstalk update-environment --application-name $APP_NAME --environment-name "CarsApi-env" --version-label=$CI_PIPELINE_IID | jq '.CNAME' --raw-output)
+    - sleep 45
+    - curl http://$CNAME/actuator/info | grep $CI_PIPELINE_IID
+    - curl http://$CNAME/actuator/health | grep "UP"
+
+```
+
+![pipelin] (https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-up.PNG)
