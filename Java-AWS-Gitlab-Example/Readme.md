@@ -508,7 +508,10 @@ unit tests:
 ![junit c](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-juni-c.PNG)
 
 
-https://pmd.github.io/latest/pmd_rules_java_bestpractices.html#systemprintln
+## in case of junit failure 
+we will see the below report
+![report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/junit-failed.PNG)
+
 
 
 # 16. Api testing using newman/postman
@@ -578,3 +581,4 @@ this will also create a gitlab page for our newman report
 https://docs.gitlab.com/ee/user/project/pages/
 https://www.youtube.com/watch?v=Qlvbc6kIBOk
 https://github.com/postmanlabs/newman
+https://pmd.github.io/latest/pmd_rules_java_bestpractices.html#systemprintln
