@@ -14,7 +14,7 @@
 13. Test code using PMD
 14. Automate Test code using pmd
 15. Integration JUnit with Gitlab CI
-
+16. Api testing using newman/postman
 ****************
 # 1. Introduction
 In this example we will use  a JAVA application in GITLAB to perform CICD
