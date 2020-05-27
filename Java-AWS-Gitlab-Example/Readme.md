@@ -438,3 +438,32 @@ Code failed
 
 Report in browser
 ![report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pmd_report.PNG)
+
+
+# 13. Automate Test code using pmd
+
+in this task we will create a new job and save the pmd report as an artifact
+```
+code quality:
+  stage: test
+  image: openjdk:12-alpine # we are using gradle thats why we have to use jdk
+  script:
+    - ./gradlew pmdMain pmdTest
+  artifacts:
+    when: always # this artifacts wil be saved always in success or failed
+    paths:
+      - build/reports/pmd
+```
+
+now as we already have rules updated with checking system print ln, once we run our pipeline the new job will fail and artifact will be placed on location:
+
+![failed](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/code_quality_failed.PNG)
+
+![pipeline](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/code-quality-failed.PNG)
+
+artifact placed
+
+![artifact](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifact_updated.PNG)
+
+Report PMD
+![pmd report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifact_uploaded.PNG)
