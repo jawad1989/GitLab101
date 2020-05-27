@@ -149,6 +149,53 @@ AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web ap
 this will deploy our app to beanstalk/aws clous and we are testing it using postman
 ![test](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-i.PNG)
 
-* Automate - deploy to AWS using Gitlab
+# 8. Automate - deploy to AWS using Gitlab
 
 gitlab cant directly upload to `elastic beanstalk`, we will use `aws s3`. So we will upload jar file to s3 from gitlab and deploy it on production environment.
+
+```
+deploy to aws:
+  stage: deploy
+  image:
+    name: banst/awscli # un official docker image
+    entrypoint: [""]
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./build/libs/cars-api.jar s3://$S3_BUCKET/cars-api.jar
+
+```
+
+### * Create a S3 Bucket
+
+Bucket Name: gitlab-beanstalk
+![Create Bucket](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/create-bucket.PNG)
+
+### Gitlab Group Settings
+   
+  *  Create a new variable with S3_bucket as name
+   
+   > un check the protected check box
+   
+   ![bucket variable](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/gitlab-add-variable.PNG)
+
+
+### Upload file to AWS S3 using Gitlab
+
+* in AWS , goto IAM
+* Create a new user `gitlabci`
+* assign policy `AmazonS3FullAccess`
+![se](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/s3-policy-iam.PNG)
+* copy the access key and secret
+![s3](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/iam-user-summary.PNG)
+
+* in gitlab create variables
+
+AWS_ACCESS_KEY_ID
+
+![key](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/git-var.PNG)
+
+AWS_SECRET_ACCESS_KEY
+
+![key](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/git-var-2.PNG)
+
+* Commit and Push the Gitlab-ci
