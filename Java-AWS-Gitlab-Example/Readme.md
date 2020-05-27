@@ -415,3 +415,26 @@ deploy to aws:
 ```
 
 ![pipelin](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-up.PNG)
+
+
+# 12. Test code using PMD
+
+we will test the code using PMD library that checks for code like un assigned variables, using system println and returns the report by failing the build.
+
+Source: https://pmd.github.io/latest/pmd_rules_java_bestpractices.html#systemprintln
+
+
+Run the test
+
+```
+gradlew pmdTest pmdMain
+```
+
+![add](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pmd-systemprintln.PNG)
+
+Code failed
+
+![Code Failed](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/code_failed.PNG)
+
+Report in browser
+![report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pmd_report.PNG)
