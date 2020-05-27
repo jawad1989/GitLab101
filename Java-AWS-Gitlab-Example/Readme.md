@@ -95,3 +95,20 @@ build:
   
   ![smoke-success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-success.PNG)
  
+# 7. Elastic Bean Stalk
+AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker on familiar servers such as Apache, Nginx, Passenger, and IIS.
+
+* sign in to yout AWS console
+* Select Elastic BeanStalk in services
+* Create Application
+* Name the app
+
+![name the app](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-a.PNG)
+
+* select java in environment
+
+![select java](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-b.PNG)
+
+* Start with sample code
+
+![beanstalk](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-creating-sample.PNG)
