@@ -509,3 +509,72 @@ unit tests:
 
 
 https://pmd.github.io/latest/pmd_rules_java_bestpractices.html#systemprintln
+
+
+# 16. Api testing using newman/postman
+
+in this stage we wwill add jobs to run our potman tests from gitlab-ci
+1) run postman, goto tests tab for get all cars
+2) from right side Press "status code 200" test, this will create a test in test section
+3) export the collection and save in the project folder
+4) export the enviornmnet and save in the project folder
+
+![postman](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-a.PNG)
+
+![export](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-a-b.PNG)
+
+5) add a new job and stage(postdeploy)
+
+this will use `newman` to test postman collection from cli and export the reports
+
+```
+api testing:
+  stage: postdeploy
+  image:
+    name: vdespa/newman # this is a docker image with newman installed
+    entrypoint: [""]
+  script:
+    - newman --version
+    - newman run "Cars API.postman_collection.json" --environment Production.postman_environment.json --reporters cli,htmlextra,junit --reporter-htmlextra-export "newman/report.html" --reporter-junit-export "newman/report.xml"
+  artifacts:
+    when: always
+    paths:
+      - newman/
+    reports:
+      junit: newman/report.xml
+```
+
+6) use gitlab pages to export/view the `newman` report
+
+```
+pages:
+  stage: publishing
+  script:
+    - mkdir public
+    - mv newman/report.html public/index.html
+  artifacts:
+    paths:
+      - public
+```
+
+7) once pipleline is completed, you will notice a new job will automatically be created
+
+![auto job](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-c.PNG)
+
+goto tests and goto deploy to see the job type
+![job new](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-d.PNG)
+
+this will also create a gitlab page for our newman report
+![gitlab pages](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/gitlabpages.PNG)
+
+![pages](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-e.PNG)
+
+![pages](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-f.PNG)
+
+
+
+**************
+# Resources
+https://docs.gitlab.com/ee/user/project/pages/
+https://www.youtube.com/watch?v=Qlvbc6kIBOk
+https://github.com/postmanlabs/newman
