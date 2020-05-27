@@ -270,12 +270,12 @@ we have to do below two steps:
   script:
     - aws configure set region us-east-1
     - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
-    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=#S3_BUCKET,S3Key=$ARTIFACT_NAME
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=$S3_BUCKET,S3Key=$ARTIFACT_NAME
     - aws elasticbeanstalk update-envirionment --application-name $APP_NAME --environment-name "production" --version-label $CI_PIPELINE_IID
 
 ```
 
-complete gitlab ci code:
+### complete gitlab ci code:
 ```
 variables:
   ARTIFACT_NAME: cars-api-v$CI_PIPELINE_IID.jar # The unique ID of the current pipeline scoped to project
@@ -306,7 +306,7 @@ smoke test:
     - sleep 30
     - curl http://localhost:5000/actuator/health | grep "UP"
 
-deploy to s3:
+deploy to aws:
   stage: deploy
   image:
     name: banst/awscli # un official docker image
@@ -314,8 +314,31 @@ deploy to s3:
   script:
     - aws configure set region us-east-1
     - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
-    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=#S3_BUCKET,S3Key=$ARTIFACT_NAME
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=$S3_BUCKET,S3Key=$ARTIFACT_NAME
     - aws elasticbeanstalk update-envirionment --application-name $APP_NAME --environment-name "production" --version-label $CI_PIPELINE_IID
 
 ```
 https://docs.aws.amazon.com/cli/latest/reference/elasticbeanstalk/
+
+
+###  Now commit and push the gitlab ci file
+ Pipeline will fail, reason is our use does not have permission to exectue elastic bean stalk commands
+ ```
+ $ aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
+ upload: build/libs/cars-api-v8.jar to s3://gitlab-beanstalk/cars-api-v8.jar
+ $ aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=#S3_BUCKET,S3Key=$ARTIFACT_NAME
+ An error occurred (AccessDenied) when calling the CreateApplicationVersion operation: User: arn:aws:iam::402953086859:user/gitlabci is not authorized to perform: elasticbeanstalk:CreateApplicationVersion on resource: arn:aws:elasticbeanstalk:us-east-1:402953086859:applicationversion/cars-api/8
+Running after_script
+00:01
+Uploading artifacts for failed job
+00:02
+ ERROR: Job failed: exit code 255
+ ```
+ ###  Assign permissions to user and re run the job
+  * Goto IAM
+  * select User
+  * press `Add permission`
+  * assign the permission
+  
+  ![permission](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/elastic-bean-permission-iam.PNG)
+ 
