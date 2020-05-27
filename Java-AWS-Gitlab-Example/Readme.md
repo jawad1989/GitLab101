@@ -467,3 +467,37 @@ artifact placed
 
 Report PMD
 ![pmd report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifact_uploaded.PNG)
+
+
+# 14. Integration JUnit with Gitlab CI
+
+we can run unit test in inteelliJ by runnin `gradlew test` we will add a new job in gitlab ci
+
+this will run the defined tests and set the reult in artifacts
+
+```
+unit tests:
+  stage: test
+  image: openjdl:12-alpine
+  script:
+    - ./gradlew test
+  artifacts:
+    when: always
+    paths:
+      - build/reports/tests
+    reports:
+      junit: build/test-results/test/*.xml
+```
+
+> we can also view junit results in gitlab ci pipeline view
+
+![unit test](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/unit%20tests.PNG)
+
+![junit a](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-junit.PNG)
+
+![junit b](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-junit-b.PNG)
+
+![junit c](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/1-juni-c.PNG)
+
+
+https://pmd.github.io/latest/pmd_rules_java_bestpractices.html#systemprintln
