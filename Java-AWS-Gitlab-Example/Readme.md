@@ -6,6 +6,14 @@
 5. Build/Test Java project locally
 6. Create first CICD file using intelliJ
 7. Create a smoke test
+8. Elastic Bean Stalk
+9. Automate - deploy to AWS using Gitlab
+10. Upload jar file to beanstalk
+11. Getting info API to run
+12. Testing the app version in deploy stage
+13. Test code using PMD
+14. Automate Test code using pmd
+15. Integration JUnit with Gitlab CI
 
 ****************
 # 1. Introduction
@@ -105,7 +113,7 @@ build:
   
   ![smoke-success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-success.PNG)
  
-# 7. Elastic Bean Stalk
+# 8. Elastic Bean Stalk
 AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker on familiar servers such as Apache, Nginx, Passenger, and IIS.
 
 * sign in to yout AWS console
@@ -149,7 +157,7 @@ AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web ap
 this will deploy our app to beanstalk/aws clous and we are testing it using postman
 ![test](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-i.PNG)
 
-# 8. Automate - deploy to AWS using Gitlab
+# 9. Automate - deploy to AWS using Gitlab
 
 gitlab cant directly upload to `elastic beanstalk`, we will use `aws s3`. So we will upload jar file to s3 from gitlab and deploy it on production environment.
 
@@ -248,7 +256,7 @@ deploy to aws:
     - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
 
 ```
-# 9. Upload jar file to beanstalk
+# 10. Upload jar file to beanstalk
 
 we have to do below two steps:
  1. create a new app version
@@ -348,7 +356,7 @@ Uploading artifacts for failed job
  
  ![S3 success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/success-s3.PNG)
 
-# 10. Getting info API to run
+# 11. Getting info API to run
 we will update our code to get the info like env version from API in postman
 below are the changes that need to be done in gitlab ci
 
@@ -391,7 +399,7 @@ deploy to aws:
 after pipelines gets complete you can view the status in postman:
 ![postman](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/info-api.PNG)
 
-# 11. Testing the app version in deploy stage
+# 12. Testing the app version in deploy stage
 
 below code will grep the app version and status from deployed pipeline
 ```
@@ -417,7 +425,7 @@ deploy to aws:
 ![pipelin](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-up.PNG)
 
 
-# 12. Test code using PMD
+# 13. Test code using PMD
 
 we will test the code using PMD library that checks for code like un assigned variables, using system println and returns the report by failing the build.
 
@@ -440,7 +448,7 @@ Report in browser
 ![report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pmd_report.PNG)
 
 
-# 13. Automate Test code using pmd
+# 14. Automate Test code using pmd
 
 in this task we will create a new job and save the pmd report as an artifact
 ```
@@ -469,7 +477,7 @@ Report PMD
 ![pmd report](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifact_uploaded.PNG)
 
 
-# 14. Integration JUnit with Gitlab CI
+# 15. Integration JUnit with Gitlab CI
 
 we can run unit test in inteelliJ by runnin `gradlew test` we will add a new job in gitlab ci
 
