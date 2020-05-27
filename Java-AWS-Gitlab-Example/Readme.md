@@ -153,6 +153,8 @@ this will deploy our app to beanstalk/aws clous and we are testing it using post
 
 gitlab cant directly upload to `elastic beanstalk`, we will use `aws s3`. So we will upload jar file to s3 from gitlab and deploy it on production environment.
 
+> AWS CLI docs : https://docs.aws.amazon.com/cli/latest/reference/s3/
+
 ```
 deploy to aws:
   stage: deploy
@@ -199,3 +201,121 @@ AWS_SECRET_ACCESS_KEY
 ![key](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/git-var-2.PNG)
 
 * Commit and Push the Gitlab-ci
+ this will run the pipeline where our code is being built as a jar and pushed on our s3 bucket
+ 
+ ![upload](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-upload-to-s3.PNG)
+ 
+* pushed successfully to S3
+
+![S3-success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/s3-sucess-upload.PNG)
+
+Final pipeline
+```
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  ARTIFACT_NAME: cars-api.jar
+
+build:
+  stage: build
+  image: openjdk:12-alpine
+  script:
+    - ./gradlew build
+  artifacts:
+    paths:
+      - ./build/libs/
+
+smoke test:
+  stage: test
+  image: openjdk:12-alpine
+  before_script:
+    - apk --no-cache add curl
+  script:
+    - java -jar ./build/libs/$ARTIFACT_NAME & # to run in background
+    - sleep 30
+    - curl http://localhost:5000/actuator/health | grep "UP"
+
+deploy to aws:
+  stage: deploy
+  image:
+    name: banst/awscli # un official docker image
+    entrypoint: [""]
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
+
+```
+# 9. Upload jar file to beanstalk
+
+we have to do below two steps:
+ 1. create a new app version
+ we will using pre defined variables to generate a unique name/id for our version
+ 
+ 2. update the env with our new version
+ 
+ 
+ in this task we will use AWS elasticbeanstalk commands for IAM
+ 
+ https://docs.aws.amazon.com/cli/latest/reference/elasticbeanstalk/
+ 
+ ```
+ deploy to s3:
+  stage: deploy
+  image:
+    name: banst/awscli # un official docker image
+    entrypoint: [""]
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=#S3_BUCKET,S3Key=$ARTIFACT_NAME
+    - aws elasticbeanstalk update-envirionment --application-name $APP_NAME --environment-name "production" --version-label $CI_PIPELINE_IID
+
+```
+
+complete gitlab ci code:
+```
+variables:
+  ARTIFACT_NAME: cars-api-v$CI_PIPELINE_IID.jar # The unique ID of the current pipeline scoped to project
+  APP_NAME: cars-api
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  image: openjdk:12-alpine
+  script:
+    - ./gradlew build
+    - mv ./build/libs/cars-api.jar ./build/libs/$ARTIFACT_NAME
+  artifacts:
+    paths:
+      - ./build/libs/
+
+smoke test:
+  stage: test
+  image: openjdk:12-alpine
+  before_script:
+    - apk --no-cache add curl
+  script:
+    - java -jar ./build/libs/$ARTIFACT_NAME & # to run in background
+    - sleep 30
+    - curl http://localhost:5000/actuator/health | grep "UP"
+
+deploy to s3:
+  stage: deploy
+  image:
+    name: banst/awscli # un official docker image
+    entrypoint: [""]
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./build/libs/$ARTIFACT_NAME s3://$S3_BUCKET/$ARTIFACT_NAME
+    - aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $CI_PIPELINE_IID --source-bundle S3Bucket=#S3_BUCKET,S3Key=$ARTIFACT_NAME
+    - aws elasticbeanstalk update-envirionment --application-name $APP_NAME --environment-name "production" --version-label $CI_PIPELINE_IID
+
+```
+https://docs.aws.amazon.com/cli/latest/reference/elasticbeanstalk/
