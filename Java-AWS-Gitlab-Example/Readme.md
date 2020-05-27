@@ -65,6 +65,33 @@ build:
   
   ![build file](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifacts.PNG)
   
+  7. Create a smoke test
+   
+   >Smoke Test: simple test to check if something is working
+   
+   * Add below job in gitlab-ci
+    ***its an alpine image so it doesnt comes with curl, so we have to install it***
+    ***localhost:5000 is base url, we can check this in postman***
+    ***curl 0 means success, 1 means failed***
+   ```
+  smoke test:
+  stage: test
+  image: openjdk:12-alpine
+  before_script:
+    - apk --no-cache add curl
+  script:
+    - java -jar ./build/libs/cars-api.rar & # to run in background
+    - sleep 30
+    - curl http://localhost:5000/actuator/health | grep "UP"
+   ```
+   
+   * Commit and push the file from intelliJ
+   
+   * in Gitlab pipeline will start once the push is complete
+   
+   ![smoketest-pipeline](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipleine-smoke.PNG)
   
+  * Pipeline is complete, smoke test is successfull
   
+  ![smoke-success](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/pipeline-success.PNG)
  
