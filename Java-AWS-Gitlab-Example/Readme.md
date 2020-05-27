@@ -1,4 +1,14 @@
-# 1. introduction
+# Table of Contents
+1. Introduction
+2. Clone the project in intelliJ
+3. Build the project using Gradle
+4. Testing using postman
+5. Build/Test Java project locally
+6. Create first CICD file using intelliJ
+7. Create a smoke test
+
+****************
+# 1. Introduction
 In this example we will use  a JAVA application in GITLAB to perform CICD
 
 # 2. Clone the project in intelliJ
@@ -65,7 +75,7 @@ build:
   
   ![build file](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/artifacts.PNG)
   
-  7. Create a smoke test
+ # 7. Create a smoke test
    
    >Smoke Test: simple test to check if something is working
    
@@ -112,3 +122,33 @@ AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web ap
 * Start with sample code
 
 ![beanstalk](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-creating-sample.PNG)
+
+* once the env is created 
+
+![Env created](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-d.PNG)
+
+* Sample app is running
+
+![Sample App](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-c.PNG)
+
+* upload the jar file on beanstalk
+
+![jar](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-e.PNG)
+
+![upload](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-f.PNG)
+
+* now duplicate the localhost environment by clicking the gear icon and pressing duplicate
+
+![duplicate](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-g.PNG)
+
+* get the url from beanstalk and update teh initial and current url
+
+![updateurl](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-g.PNG)
+
+* Test the production env from postman
+this will deploy our app to beanstalk/aws clous and we are testing it using postman
+![test](https://github.com/jawad1989/GitLab101/blob/master/Java-AWS-Gitlab-Example/misc/beanstalk-i.PNG)
+
+* Automate - deploy to AWS using Gitlab
+
+gitlab cant directly upload to `elastic beanstalk`, we will use `aws s3`. So we will upload jar file to s3 from gitlab and deploy it on production environment.
